@@ -24,3 +24,4 @@ C:\Users\arsen\Desktop\Tecno\task1_framework\obj\Debug\net8.0\Pr1.MinWebService.
 C:\Users\arsen\Desktop\Tecno\task1_framework\obj\Debug\net8.0\Pr1.MinWebService.genruntimeconfig.cache
 C:\Users\arsen\Desktop\Tecno\task1_framework\obj\Debug\net8.0\ref\Pr1.MinWebService.dll
 C:\Users\arsen\Desktop\Tecno\task1_framework\bin\Debug\net8.0\Pr1.MinWebService.postman_collection.json
+C:\Users\arsen\Desktop\Tecno\task1_framework\obj\Debug\net8.0\Pr1.MinWebService.sourcelink.json

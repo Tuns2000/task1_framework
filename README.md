@@ -149,40 +149,40 @@ dotnet test --verbosity normal
 
 ### Сценарий 1: Создание элемента
 
-```
-curl -X POST http://localhost:54255/api/items -H "Content-Type: application/json" -d "{\"name\":\"Тетрадь\",\"description\":\"48 листов, клетка\",\"price\":45}"
+```powershell
+Invoke-RestMethod -Uri http://localhost:54255/api/items -Method POST -ContentType 'application/json' -Body '{"name":"Тетрадь","description":"48 листов, клетка","price":45}'
 ```
 
-Ожидаемый результат: статус `201`, JSON с полями `id`, `name`, `description`, `price`, `createdAt`.
+Ожидаемый результат: JSON с полями `id`, `name`, `description`, `price`, `createdAt`.
 
 ### Сценарий 2: Создание второго элемента
 
-```
-curl -X POST http://localhost:54255/api/items -H "Content-Type: application/json" -d "{\"name\":\"Ручка\",\"description\":\"Шариковая, синяя\",\"price\":25}"
+```powershell
+Invoke-RestMethod -Uri http://localhost:54255/api/items -Method POST -ContentType 'application/json' -Body '{"name":"Ручка","description":"Шариковая, синяя","price":25}'
 ```
 
-Ожидаемый результат: статус `201`, новый элемент с другим `id`.
+Ожидаемый результат: новый элемент с другим `id`.
 
 ### Сценарий 3: Получение списка всех элементов
 
-```
-curl http://localhost:54255/api/items
+```powershell
+Invoke-RestMethod -Uri http://localhost:54255/api/items
 ```
 
 Ожидаемый результат: массив из двух элементов, отсортированных по имени (Ручка, Тетрадь).
 
 ### Сценарий 4: Фильтрация по имени
 
-```
-curl "http://localhost:54255/api/items?name=%D0%A2%D0%B5%D1%82%D1%80%D0%B0%D0%B4%D1%8C"
+```powershell
+Invoke-RestMethod -Uri 'http://localhost:54255/api/items?name=Тетрадь'
 ```
 
 Ожидаемый результат: массив с одним элементом «Тетрадь».
 
 ### Сценарий 5: Сортировка по цене по убыванию
 
-```
-curl "http://localhost:54255/api/items?sortBy=price&desc=true"
+```powershell
+Invoke-RestMethod -Uri 'http://localhost:54255/api/items?sortBy=price&desc=true'
 ```
 
 Ожидаемый результат: первым идёт «Тетрадь» (45), затем «Ручка» (25).
@@ -191,60 +191,60 @@ curl "http://localhost:54255/api/items?sortBy=price&desc=true"
 
 Скопируйте `id` из ответа сценария 1 и подставьте вместо `ВСТАВЬТЕ_ID`:
 
-```
-curl http://localhost:54255/api/items/ВСТАВЬТЕ_ID
+```powershell
+Invoke-RestMethod -Uri http://localhost:54255/api/items/ВСТАВЬТЕ_ID
 ```
 
-Ожидаемый результат: статус `200`, JSON одного элемента.
+Ожидаемый результат: JSON одного элемента.
 
 ### Сценарий 7: Запрос несуществующего элемента → 404
 
-```
-curl http://localhost:54255/api/items/00000000-0000-0000-0000-000000000000
+```powershell
+try { Invoke-RestMethod -Uri http://localhost:54255/api/items/00000000-0000-0000-0000-000000000000 } catch { $_.ErrorDetails.Message }
 ```
 
-Ожидаемый результат: статус `404`, JSON:
+Ожидаемый результат:
 ```json
 {"code":"not_found","message":"Элемент с идентификатором 00000000-... не найден","requestId":"..."}
 ```
 
 ### Сценарий 8: Валидация — пустое имя → 400
 
-```
-curl -X POST http://localhost:54255/api/items -H "Content-Type: application/json" -d "{\"name\":\"\",\"description\":\"\",\"price\":10}"
+```powershell
+try { Invoke-RestMethod -Uri http://localhost:54255/api/items -Method POST -ContentType 'application/json' -Body '{"name":"","description":"","price":10}' } catch { $_.ErrorDetails.Message }
 ```
 
-Ожидаемый результат: статус `400`, JSON:
+Ожидаемый результат:
 ```json
 {"code":"validation","message":"Поле name не должно быть пустым","requestId":"..."}
 ```
 
 ### Сценарий 9: Валидация — отрицательная цена → 400
 
-```
-curl -X POST http://localhost:54255/api/items -H "Content-Type: application/json" -d "{\"name\":\"Тест\",\"description\":\"\",\"price\":-5}"
+```powershell
+try { Invoke-RestMethod -Uri http://localhost:54255/api/items -Method POST -ContentType 'application/json' -Body '{"name":"Тест","description":"","price":-5}' } catch { $_.ErrorDetails.Message }
 ```
 
-Ожидаемый результат: статус `400`, JSON:
+Ожидаемый результат:
 ```json
 {"code":"validation","message":"Поле price не может быть отрицательным","requestId":"..."}
 ```
 
 ### Сценарий 10: Проверка заголовка X-Request-Id
 
-```
-curl -v http://localhost:54255/api/items 2>&1 | findstr "X-Request-Id"
+```powershell
+$r = Invoke-WebRequest -Uri http://localhost:54255/api/items; $r.Headers['X-Request-Id']
 ```
 
-Ожидаемый результат: строка вида `< X-Request-Id: abc123...`
+Ожидаемый результат: строка вида `abc123def456...`
 
 ### Сценарий 11: Свой X-Request-Id сохраняется
 
-```
-curl -v -H "X-Request-Id: my-test-123" http://localhost:54255/api/items 2>&1 | findstr "X-Request-Id"
+```powershell
+$r = Invoke-WebRequest -Uri http://localhost:54255/api/items -Headers @{'X-Request-Id'='my-test-123'}; $r.Headers['X-Request-Id']
 ```
 
-Ожидаемый результат: в ответе `< X-Request-Id: my-test-123` — тот же ID, что отправили.
+Ожидаемый результат: `my-test-123` — тот же ID, что отправили.
 
 ### Проверка журнала
 

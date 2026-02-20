@@ -431,3 +431,4 @@ C:\Users\arsen\Desktop\Tecno\task1_framework\Tests\obj\Debug\net8.0\Pr1.MinWebSe
 C:\Users\arsen\Desktop\Tecno\task1_framework\Tests\obj\Debug\net8.0\Pr1.MinWebService.Tests.genruntimeconfig.cache
 C:\Users\arsen\Desktop\Tecno\task1_framework\Tests\obj\Debug\net8.0\ref\Pr1.MinWebService.Tests.dll
 C:\Users\arsen\Desktop\Tecno\task1_framework\Tests\bin\Debug\net8.0\Pr1.MinWebService.postman_collection.json
+C:\Users\arsen\Desktop\Tecno\task1_framework\Tests\obj\Debug\net8.0\Pr1.MinWebService.Tests.sourcelink.json

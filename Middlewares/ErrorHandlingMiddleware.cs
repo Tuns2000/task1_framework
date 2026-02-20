@@ -42,6 +42,11 @@ public sealed class ErrorHandlingMiddleware
         }
     }
 
+    private static readonly JsonSerializerOptions CamelCase = new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+    };
+
     private static async Task WriteError(HttpContext context, int statusCode, string code, string message, string requestId)
     {
         if (context.Response.HasStarted)
@@ -52,6 +57,6 @@ public sealed class ErrorHandlingMiddleware
         context.Response.ContentType = "application/json; charset=utf-8";
 
         var payload = new ErrorResponse(code, message, requestId);
-        await context.Response.WriteAsync(JsonSerializer.Serialize(payload));
+        await context.Response.WriteAsync(JsonSerializer.Serialize(payload, CamelCase));
     }
 }

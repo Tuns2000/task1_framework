@@ -44,7 +44,8 @@ public sealed class ErrorHandlingMiddleware
 
     private static readonly JsonSerializerOptions CamelCase = new()
     {
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
     };
 
     private static async Task WriteError(HttpContext context, int statusCode, string code, string message, string requestId)

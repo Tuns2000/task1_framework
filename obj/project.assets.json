@@ -8,23 +8,23 @@
     "net8.0": []
   },
   "packageFolders": {
-    "C:\\Users\\burnf\\.nuget\\packages\\": {},
+    "C:\\Users\\arsen\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\burnf\\Downloads\\Шаблон_Практика_1_Мини_веб_служба\\src\\Pr1.MinWebService\\Pr1.MinWebService.csproj",
+      "projectUniqueName": "C:\\Users\\arsen\\Desktop\\Tecno\\task1_framework\\Pr1.MinWebService.csproj",
       "projectName": "Pr1.MinWebService",
-      "projectPath": "C:\\Users\\burnf\\Downloads\\Шаблон_Практика_1_Мини_веб_служба\\src\\Pr1.MinWebService\\Pr1.MinWebService.csproj",
-      "packagesPath": "C:\\Users\\burnf\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\burnf\\Downloads\\Шаблон_Практика_1_Мини_веб_служба\\src\\Pr1.MinWebService\\obj\\",
+      "projectPath": "C:\\Users\\arsen\\Desktop\\Tecno\\task1_framework\\Pr1.MinWebService.csproj",
+      "packagesPath": "C:\\Users\\arsen\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\arsen\\Desktop\\Tecno\\task1_framework\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
       ],
       "configFilePaths": [
-        "C:\\Users\\burnf\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\arsen\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
@@ -33,7 +33,6 @@
       ],
       "sources": {
         "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -52,7 +51,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "9.0.200"
+      "SdkAnalysisLevel": "9.0.300"
     },
     "frameworks": {
       "net8.0": {
@@ -76,7 +75,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.200/PortableRuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.311/PortableRuntimeIdentifierGraph.json"
       }
     }
   }

@@ -1,0 +1,610 @@
+{
+	"info": {
+		"name": "Pr1.MinWebService",
+		"description": "Коллекция тестов для мини веб службы — Практическое занятие №1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:54255",
+			"type": "string"
+		},
+		{
+			"key": "createdItemId",
+			"value": "",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "1. Получить пустой список",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/items",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "items"]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Статус 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Ответ — массив', function () {",
+							"    var json = pm.response.json();",
+							"    pm.expect(json).to.be.an('array');",
+							"});",
+							"",
+							"pm.test('Заголовок X-Request-Id присутствует', function () {",
+							"    pm.response.to.have.header('X-Request-Id');",
+							"});",
+							"",
+							"pm.test('Content-Type — application/json', function () {",
+							"    pm.response.to.have.header('Content-Type');",
+							"    pm.expect(pm.response.headers.get('Content-Type')).to.include('application/json');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"response": []
+		},
+		{
+			"name": "2. Создать элемент (Тетрадь)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Тетрадь\",\n  \"description\": \"48 листов, клетка\",\n  \"price\": 45\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/items",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "items"]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Статус 201 Created', function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Ответ содержит id, name, description, price, createdAt', function () {",
+							"    var json = pm.response.json();",
+							"    pm.expect(json).to.have.property('id');",
+							"    pm.expect(json).to.have.property('name', 'Тетрадь');",
+							"    pm.expect(json).to.have.property('description', '48 листов, клетка');",
+							"    pm.expect(json).to.have.property('price', 45);",
+							"    pm.expect(json).to.have.property('createdAt');",
+							"});",
+							"",
+							"pm.test('Заголовок Location указывает на созданный ресурс', function () {",
+							"    pm.response.to.have.header('Location');",
+							"    var location = pm.response.headers.get('Location');",
+							"    pm.expect(location).to.include('/api/items/');",
+							"});",
+							"",
+							"pm.test('Заголовок X-Request-Id присутствует', function () {",
+							"    pm.response.to.have.header('X-Request-Id');",
+							"});",
+							"",
+							"// Сохраняем ID для последующих запросов",
+							"var json = pm.response.json();",
+							"pm.collectionVariables.set('createdItemId', json.id);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"response": []
+		},
+		{
+			"name": "3. Получить элемент по ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/items/{{createdItemId}}",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "items", "{{createdItemId}}"]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Статус 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Возвращён тот же элемент, что был создан', function () {",
+							"    var json = pm.response.json();",
+							"    var expectedId = pm.collectionVariables.get('createdItemId');",
+							"    pm.expect(json.id).to.eql(expectedId);",
+							"    pm.expect(json.name).to.eql('Тетрадь');",
+							"    pm.expect(json.description).to.eql('48 листов, клетка');",
+							"    pm.expect(json.price).to.eql(45);",
+							"});",
+							"",
+							"pm.test('Заголовок X-Request-Id присутствует', function () {",
+							"    pm.response.to.have.header('X-Request-Id');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"response": []
+		},
+		{
+			"name": "4. Создать второй элемент (Ручка)",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Ручка\",\n  \"description\": \"Шариковая, синяя\",\n  \"price\": 25\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/items",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "items"]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Статус 201 Created', function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"",
+							"pm.test('Имя элемента — Ручка', function () {",
+							"    var json = pm.response.json();",
+							"    pm.expect(json.name).to.eql('Ручка');",
+							"    pm.expect(json.price).to.eql(25);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"response": []
+		},
+		{
+			"name": "5. Получить список (2 элемента)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/items",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "items"]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Статус 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('В списке минимум 2 элемента', function () {",
+							"    var json = pm.response.json();",
+							"    pm.expect(json.length).to.be.at.least(2);",
+							"});",
+							"",
+							"pm.test('Список отсортирован по имени', function () {",
+							"    var json = pm.response.json();",
+							"    for (var i = 1; i < json.length; i++) {",
+							"        pm.expect(json[i].name.localeCompare(json[i-1].name)).to.be.at.least(0);",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"response": []
+		},
+		{
+			"name": "6. Фильтрация по имени (?name=Тетрадь)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/items?name=Тетрадь",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "items"],
+					"query": [
+						{
+							"key": "name",
+							"value": "Тетрадь"
+						}
+					]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Статус 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Все элементы содержат \"Тетрадь\" в имени', function () {",
+							"    var json = pm.response.json();",
+							"    pm.expect(json.length).to.be.at.least(1);",
+							"    json.forEach(function (item) {",
+							"        pm.expect(item.name.toLowerCase()).to.include('тетрадь');",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"response": []
+		},
+		{
+			"name": "7. Сортировка по цене по возрастанию",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/items?sortBy=price",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "items"],
+					"query": [
+						{
+							"key": "sortBy",
+							"value": "price"
+						}
+					]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Статус 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Цены идут по возрастанию', function () {",
+							"    var json = pm.response.json();",
+							"    for (var i = 1; i < json.length; i++) {",
+							"        pm.expect(json[i].price).to.be.at.least(json[i-1].price);",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"response": []
+		},
+		{
+			"name": "8. Сортировка по цене по убыванию",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/items?sortBy=price&desc=true",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "items"],
+					"query": [
+						{
+							"key": "sortBy",
+							"value": "price"
+						},
+						{
+							"key": "desc",
+							"value": "true"
+						}
+					]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Статус 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Цены идут по убыванию', function () {",
+							"    var json = pm.response.json();",
+							"    for (var i = 1; i < json.length; i++) {",
+							"        pm.expect(json[i].price).to.be.at.most(json[i-1].price);",
+							"    }",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"response": []
+		},
+		{
+			"name": "9. Свой X-Request-Id сохраняется",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "X-Request-Id",
+						"value": "my-custom-request-id-42"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/api/items",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "items"]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Статус 200 OK', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('X-Request-Id в ответе совпадает с отправленным', function () {",
+							"    pm.response.to.have.header('X-Request-Id', 'my-custom-request-id-42');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"response": []
+		},
+		{
+			"name": "10. Валидация: пустое имя → 400",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"\",\n  \"description\": \"Без имени\",\n  \"price\": 10\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/items",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "items"]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Статус 400 Bad Request', function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test('Код ошибки — validation', function () {",
+							"    var json = pm.response.json();",
+							"    pm.expect(json.code).to.eql('validation');",
+							"});",
+							"",
+							"pm.test('Сообщение содержит \"name\"', function () {",
+							"    var json = pm.response.json();",
+							"    pm.expect(json.message.toLowerCase()).to.include('name');",
+							"});",
+							"",
+							"pm.test('Присутствует requestId', function () {",
+							"    var json = pm.response.json();",
+							"    pm.expect(json.requestId).to.be.a('string').and.not.empty;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"response": []
+		},
+		{
+			"name": "11. Валидация: отрицательная цена → 400",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"Ластик\",\n  \"description\": \"Белый\",\n  \"price\": -5\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/items",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "items"]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Статус 400 Bad Request', function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test('Код ошибки — validation', function () {",
+							"    var json = pm.response.json();",
+							"    pm.expect(json.code).to.eql('validation');",
+							"});",
+							"",
+							"pm.test('Сообщение содержит \"price\"', function () {",
+							"    var json = pm.response.json();",
+							"    pm.expect(json.message.toLowerCase()).to.include('price');",
+							"});",
+							"",
+							"pm.test('Присутствует requestId', function () {",
+							"    var json = pm.response.json();",
+							"    pm.expect(json.requestId).to.be.a('string').and.not.empty;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"response": []
+		},
+		{
+			"name": "12. Валидация: имя > 200 символов → 400",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"АААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААААА\",\n  \"description\": \"\",\n  \"price\": 10\n}"
+				},
+				"url": {
+					"raw": "{{baseUrl}}/api/items",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "items"]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Статус 400 Bad Request', function () {",
+							"    pm.response.to.have.status(400);",
+							"});",
+							"",
+							"pm.test('Код ошибки — validation', function () {",
+							"    var json = pm.response.json();",
+							"    pm.expect(json.code).to.eql('validation');",
+							"});",
+							"",
+							"pm.test('Присутствует requestId', function () {",
+							"    var json = pm.response.json();",
+							"    pm.expect(json.requestId).to.be.a('string').and.not.empty;",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"response": []
+		},
+		{
+			"name": "13. Несуществующий ID → 404",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/api/items/00000000-0000-0000-0000-000000000000",
+					"host": ["{{baseUrl}}"],
+					"path": ["api", "items", "00000000-0000-0000-0000-000000000000"]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Статус 404 Not Found', function () {",
+							"    pm.response.to.have.status(404);",
+							"});",
+							"",
+							"pm.test('Код ошибки — not_found', function () {",
+							"    var json = pm.response.json();",
+							"    pm.expect(json.code).to.eql('not_found');",
+							"});",
+							"",
+							"pm.test('Присутствует requestId', function () {",
+							"    var json = pm.response.json();",
+							"    pm.expect(json.requestId).to.be.a('string').and.not.empty;",
+							"});",
+							"",
+							"pm.test('Заголовок X-Request-Id присутствует', function () {",
+							"    pm.response.to.have.header('X-Request-Id');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"response": []
+		},
+		{
+			"name": "14. Корневой путь → редирект на /api/items",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/",
+					"host": ["{{baseUrl}}"],
+					"path": [""]
+				}
+			},
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Ответ успешный (200 после редиректа)', function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test('Ответ — массив (список элементов)', function () {",
+							"    var json = pm.response.json();",
+							"    pm.expect(json).to.be.an('array');",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"response": []
+		}
+	]
+}

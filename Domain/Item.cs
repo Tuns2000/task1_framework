@@ -1,3 +1,6 @@
 namespace Pr1.MinWebService.Domain;
 
-public sealed record Item(Guid Id, string Name, decimal Price);
+/// <summary>
+/// Элемент каталога — учебная задача.
+/// </summary>
+public sealed record Item(Guid Id, string Name, string Description, decimal Price, DateTime CreatedAt);
